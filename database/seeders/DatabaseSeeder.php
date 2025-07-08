@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Client;
 use App\Models\Employee;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -58,5 +59,23 @@ class DatabaseSeeder extends Seeder
             'address' => 'No. 789, Naypyidaw Avenue, Naypyidaw',
             'nrc' => '14/NPT(N)789123',
         ]);
+        $clients = [
+            [
+                'name' => 'Win Thin Associates',
+                'code' => 'WTA',
+            ],
+            [
+                'name' => 'Win Consulting Limited',
+                'code' => 'WCL',
+            ],
+            [
+                'name' => 'MAIP Corporation',
+                'code' => 'MAIP',
+            ],
+        ];
+
+        foreach ($clients as $clientData) {
+            Client::create($clientData);
+        }
     }
 }
