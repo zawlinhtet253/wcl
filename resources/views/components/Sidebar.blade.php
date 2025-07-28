@@ -2,18 +2,18 @@
   <!-- Sidebar -->
   <nav id="sidebarMenu" class="bg-dark text-white d-flex flex-column p-3 sticky-sidebar" style="width: 250px;">
     <div class="text-center mb-3">
-      <img src="https://winthinassociates.com/images/logo/WinThinLogo.png" alt="Win Consulting Limited Logo" class="img-fluid w-50 mb-2">
+      <img src="{{ asset('Logo/logo.png')}}"  class="w-50" alt="">
       <h5 class="d-none d-lg-block text-white">Win Consulting Limited</h5>
     </div>
     <hr class="border-light">
     <ul class="nav nav-pills flex-column mb-auto">
       <!-- Dashboard Link -->
-      <li class="nav-item mb-1">
+      <!-- <li class="nav-item mb-1">
         <a href="{{ route('user.dashboard') }}" class="nav-link text-white d-flex align-items-center gap-2 {{ request()->routeIs('user.dashboard') ? 'active' : '' }}" aria-current="page">
           <i class="bi bi-house-door-fill"></i>
           <span class="d-lg-inline d-none">Dashboard</span>
         </a>
-      </li>
+      </li> -->
       <!-- Attendance Link -->
       <li class="nav-item mb-1">
         <a href="{{ route('user.attendance') }}" class="nav-link text-white d-flex align-items-center gap-2 {{ request()->routeIs('user.attendance') ? 'active' : '' }}">
@@ -23,7 +23,7 @@
       </li>
       <!-- Dynamic user detail link -->
       <li class="nav-item mb-1">
-        <a href="{{ route('user.detail') }}" class="nav-link text-white d-flex align-items-center gap-2 {{ request()->routeIs('user.detail') ? 'active' : '' }}">
+        <a href="{{ route('user.detail')}}" class="nav-link text-white d-flex align-items-center gap-2 {{ request()->routeIs('user.detail') ? 'active' : '' }}">
           <i class="bi bi-person-fill"></i>
           <span class="d-lg-inline d-none">Detail</span>
         </a>
@@ -35,8 +35,39 @@
           <span class="d-lg-inline d-none">Timesheet</span>
         </a>
       </li>
+      <li class="nav-item mb-1">
+        <a href="{{ route('admin.clients') }}" class="nav-link text-white d-flex align-items-center gap-2 {{ request()->routeIs('admin.clients*') ? 'active' : '' }}">
+          <i class="fa-solid fa-building"></i>
+          <span class="d-lg-inline d-none">Clients</span>
+        </a>
+      </li>
+      @if(auth()->user()->level == 3 )
+        <li class="nav-item mb-1">
+          <a href="{{ route('admin.teams')}}" class="nav-link text-white d-flex align-items-center gap-2 {{ request()->routeIs('admin.teams*') ? 'active' : '' }}">
+            <i class="fas fa-users"></i>
+            <span class="d-lg-inline d-none">Teams</span>
+          </a>
+        </li>
+        <li class="nav-item mb-1">
+          <a href="{{ route('admin.users')}}" class="nav-link text-white d-flex align-items-center gap-2 {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
+            <i class="fa-solid fa-users"></i>
+            <span class="d-lg-inline d-none">Users</span>
+          </a>
+        </li>
+
+        
+        
+      @endif
     </ul>
     <div class="mt-auto">
+      <h5 class="">{{ auth()->user()->name }}</h5>
+      @if (auth()->user()->level == 1)
+        <p>User</p>
+      @elseif (auth()->user()->level == 2)
+        <p>Team Leader</p>
+      @else 
+        <p>Admin</p>
+      @endif
       <form action="{{ route('logout') }}" method="POST">
         @csrf
         <button type="submit" class="btn btn-outline-light w-100">

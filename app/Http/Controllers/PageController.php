@@ -15,9 +15,6 @@ class PageController extends Controller
     public function dashboard() {
         return view('pages.user.dashboard');
     }
-    public function detail() {
-        $user = Auth::user();
-        return view('pages.user.detail', compact('user'));
-    }
+    
     
 }

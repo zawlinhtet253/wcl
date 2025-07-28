@@ -12,6 +12,7 @@ class Client extends Model
     protected $fillable = [
         'name',
         'code',
+        'team_id',
     ];
 
     /**
@@ -21,7 +22,9 @@ class Client extends Model
     {
         return $this->hasMany(Timesheet::class);
     }
-
+    public function team() {
+        return $this->belongsTo(Team::class);
+    }
     /**
      * Get the client's display name (code + name)
      */

@@ -10,11 +10,13 @@ return new class extends Migration
     {
         Schema::create('timesheets', function (Blueprint $table) {
             $table->id();
-            $table->integer('client_id');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
+            $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
             $table->text('description');
             $table->dateTime('from');
             $table->dateTime('to');
+            $table->boolean('status')->default(false);
+            $table->foreignId('approved_by')->nullable()->constrained('employees')->onDelete('set null');
             $table->timestamps();
 
             $table->index(['client_id', 'from', 'to']);

@@ -9,7 +9,7 @@
 <body class="dg-dark">
     <div class="container">
         <div class="text-center mt-5">
-            <img src="https://winthinassociates.com/images/logo/WinThinLogo.png" alt="" class="mt-2">
+            <img src="{{asset('Logo/logo.png')}}" alt="" class="mt-2" style="width: 200px;">
             <span class="fs-1">Win Consulting Limited</span>
         </div>
         <div class="mt-3 m-auto w-25">
@@ -22,9 +22,11 @@
             @endif
             <form class="d-flex flex-column gap-3" action="{{ route('login') }}" method="POST">
                 @csrf
+
                 <div class="mb-2">
-                    <label class="form-label">Email</label>
+                    <label class="form-label" for="email">Email</label>
                     <input
+                    id="email"
                     class="form-control"
                     type="email"
                     placeholder="Enter your Email"
@@ -33,7 +35,7 @@
                 </div>
                 
                 <div class="mb-2">
-                    <label class="form-label">Password</label>
+                    <label class="form-label" for="password">Password</label>
                     <input
                     class="form-control"
                     type="password"

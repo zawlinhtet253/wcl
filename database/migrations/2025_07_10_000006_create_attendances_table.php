@@ -12,6 +12,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
             $table->string('name'); // 'Work From Home', 'In-Office', 'Client Site', 'Leave'
+            $table->boolean('status')->default(false);
+            $table->foreignId('approved_by')->nullable()->constrained('employees')->onDelete('set null');
             $table->timestamps();
         });
     }

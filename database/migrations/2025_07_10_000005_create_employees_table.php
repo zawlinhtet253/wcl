@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('team_id')->constrained('teams')->onDelete('cascade');
             $table->string('employee_code')->unique(); // ဥပမာ WCL-001
             $table->string('position')->nullable(); // ရာထူး (ဥပမာ Manager, Developer)
             $table->text('address')->nullable(); // လိပ်စာ

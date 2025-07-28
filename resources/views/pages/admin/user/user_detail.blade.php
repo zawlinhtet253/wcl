@@ -8,10 +8,10 @@
             <p class="text-muted mb-0">Manage user information and details</p>
         </div>
         <div class="d-flex gap-2">
-            <a href="#" class="btn btn-outline-secondary">
+            <a href="{{ route('admin.users') }}" class="btn btn-outline-secondary">
                 <i class="fas fa-arrow-left me-1"></i> Back to Users
             </a>
-            <a href="{{ route('user.edit')}}" class="btn btn-primary">
+            <a href="" class="btn btn-primary">
                 <i class="fas fa-edit me-1"></i> Edit Profile
             </a>
         </div>
@@ -43,7 +43,7 @@
                     <!-- Profile Avatar -->
                     <div class="mb-3">
                         <div class="avatar-xl d-flex justify-content-center mb-3">
-                            @if($user->avatar ?? false)
+                            @if($user->avatar)
                                 <img src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->name }}" 
                                      class="rounded-circle img-fluid" style="width: 120px; height: 120px; object-fit: cover;">
                             @else
@@ -58,9 +58,9 @@
                     
                     <!-- Basic Info -->
                     <h4 class="mb-1">{{ $user->name }}</h4>
-                    @if($user->employee)
-                        <p class="text-muted mb-2">{{ $user->employee->position ?? 'Employee' }}</p>
-                        <span class="badge bg-primary mb-3">{{ $user->employee->employee_code }}</span>
+                    @if($employee)
+                        <p class="text-muted mb-2">{{ $employee->position ?? 'Employee' }}</p>
+                        <span class="badge bg-primary mb-3">{{ $employee->employee_code }}</span>
                     @endif
                 </div>
             </div>
@@ -75,8 +75,8 @@
                         <a href="mailto:{{ $user->email }}" class="btn btn-outline-primary btn-sm">
                             <i class="fas fa-envelope me-2"></i> Send Email
                         </a>
-                        @if($user->employee)
-                            <a href="#" class="btn btn-outline-info btn-sm">
+                        @if($employee)
+                            <a href="" class="btn btn-outline-info btn-sm">
                                 <i class="fas fa-id-card me-2"></i> Employee Details
                             </a>
                         @endif
@@ -95,9 +95,8 @@
 
         <!-- Right Column - Detailed Information -->
         <div class="col-xl-8 col-lg-7">
-
             <!-- Employee Information -->
-            @if($user->employee)
+            @if($employee)
             <div class="card shadow-sm border-0 mb-4">
                 <div class="card-header bg-light">
                     <h6 class="mb-0">
@@ -116,32 +115,32 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label text-muted small">Employee Code</label>
-                            <p class="mb-0 fw-medium">{{ $user->employee->employee_code }}</p>
+                            <p class="mb-0 fw-medium">{{ $employee->employee_code }}</p>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label text-muted small">Position</label>
-                            <p class="mb-0">{{ $user->employee->position ?? 'Not specified' }}</p>
+                            <p class="mb-0">{{ $employee->position ?? 'Not specified' }}</p>
                         </div>
-                        @if($user->employee->team)
+                        @if($employee->team)
                         <div class="col-md-6 mb-3">
                             <label class="form-label text-muted small">Team</label>
                             <p class="mb-0">
-                                <a href="#" class="text-decoration-none">
-                                    {{ $user->employee->team->name }}
+                                <a href="" class="text-decoration-none">
+                                    {{ $employee->team->name }}
                                 </a>
                             </p>
                         </div>
                         @endif
-                        @if($user->employee->nrc)
+                        @if($employee->nrc)
                         <div class="col-md-6 mb-3">
                             <label class="form-label text-muted small">NRC Number</label>
-                            <p class="mb-0">{{ $user->employee->nrc }}</p>
+                            <p class="mb-0">{{ $employee->nrc }}</p>
                         </div>
                         @endif
-                        @if($user->employee->address)
+                        @if($employee->address)
                         <div class="col-12 mb-3">
                             <label class="form-label text-muted small">Address</label>
-                            <p class="mb-0">{{ $user->employee->address }}</p>
+                            <p class="mb-0">{{ $employee->address }}</p>
                         </div>
                         @endif
                     </div>
@@ -166,7 +165,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <form action="#" method="POST" class="d-inline">
+                <form action="" method="POST" class="d-inline">
                     @csrf
                     <button type="submit" class="btn btn-warning">Reset Password</button>
                 </form>
@@ -194,7 +193,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <form action="#" method="POST" class="d-inline">
+                <form action="" method="POST" class="d-inline">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger">Delete User</button>
@@ -256,4 +255,3 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 @endpush
 @endsection
-```
