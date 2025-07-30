@@ -4,20 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use App\Models\Attendance;
-use App\Models\Timesheet;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AttendanceController extends Controller
 {
+    public function attendance() {
+        $authUser = Auth::user();
+        $employee = Employee::where('user_id', $authUser->id)->first();
+        $today = now()->timezone('Asia/Yangon')->toDateString();
+        $todayAttendance = $employee ? Attendance::where('employee_id', $employee->id)
+            ->whereDate('created_at', $today)
+            ->first() : null;
+        return view('pages.user.attendance', compact('employee' , 'todayAttendance'));
+    }
     public function attendances()
     {
         $user = Auth::user();
         $employee = Employee::where('user_id', $user->id)->first();
         $range = request()->input('date_range');
-
-        // Set today's date in Asia/Yangon timezone
         $today = now()->timezone('Asia/Yangon')->toDateString();
 
         // Check if user has submitted attendance today
@@ -42,38 +48,39 @@ class AttendanceController extends Controller
             }
         }
 
-        // Fetch team/all attendance data only if user has submitted their own attendance
-        if ($todayAttendance && ($user->level == 2 || $user->level == 3)) {
-            $query = Attendance::query()->with(['employee.user']);
+        // Fetch attendance data based on user level
+        $query = Attendance::query()->with(['employee.user']);
 
+        if ($user->level == 1) {
+            // Level 1: Show all their own attendance records
+            if ($employee) {
+                $query->where('employee_id', $employee->id);
+                if ($range && $start && $end) {
+                    $query->whereBetween('created_at', [$start, $end]);
+                }
+                $attendances = $query->orderBy('created_at', 'desc')->get();
+            }
+        } elseif ($user->level == 2 || $user->level == 3) {
+            // Level 2 (Team Lead) or Level 3 (Manager): Show team/all attendance for today or date range
             if ($range && $start && $end) {
-                // Use whereBetween for date range filtering
                 $query->whereBetween('created_at', [$start, $end]);
             } else {
-                // Default to today's date if no range provided
                 $query->whereDate('created_at', $today);
             }
 
-            switch ($user->level) {
-                case 2:
-                    // Team Lead - show team attendance
-                    if ($employee && $employee->team_id) {
-                        $attendances = $query->whereHas('employee', function ($query) use ($employee) {
-                            $query->where('team_id', $employee->team_id);
-                        })->get();
-                    }
-                    break;
-
-                case 3:
-                    // Manager - show all attendance
-                    $attendances = $query->get();
-                    break;
+            if ($user->level == 2 && $employee && $employee->team_id) {
+                // Level 2: Show team attendance
+                $query->whereHas('employee', function ($query) use ($employee) {
+                    $query->where('team_id', $employee->team_id);
+                });
             }
+            // Level 3: Show all attendance (no additional filter needed)
+            $attendances = $query->orderBy('created_at', 'desc')->get();
         }
 
         return view('pages.user.attendances', compact('user', 'employee', 'todayAttendance', 'attendances'));
     }
-
+    
     public function store(Request $request)
     {
         $request->validate([
@@ -90,13 +97,27 @@ class AttendanceController extends Controller
         if ($existingAttendance) {
             return redirect()->route('user.attendance')->with('error', 'Attendance already recorded for today.');
         }
-
-        $attendance = new Attendance();
-        $attendance->name = $request->name;
-        $attendance->employee_id = $request->employee_id;
-        $attendance->save();
-
-        return redirect()->route('user.attendance')->with('success', 'Attendance recorded successfully.');
+        if ($request->name == 'Leave') {
+            $attendance = new Attendance();
+            $attendance->name = $request->name;
+            $attendance->employee_id = $request->employee_id;
+            $attendance->check_in_time = now()->timezone('Asia/Yangon');
+            $attendance->check_in_latitude = $request->check_in_latitude;
+            $attendance->check_in_longitude = $request->check_in_longitude;
+            $attendance->check_out_time = now()->timezone('Asia/Yangon');
+            $attendance->check_out_latitude = $request->check_in_latitude;
+            $attendance->check_out_longitude = $request->check_in_longitude;
+            $attendance->save();
+        } else {
+            $attendance = new Attendance();
+            $attendance->name = $request->name;
+            $attendance->employee_id = $request->employee_id;
+            $attendance->check_in_time = now()->timezone('Asia/Yangon');
+            $attendance->check_in_latitude = $request->check_in_latitude;
+            $attendance->check_in_longitude = $request->check_in_longitude;
+            $attendance->save();
+        }
+        return redirect()->route('user.attendances')->with('success', 'Attendance recorded successfully.');
     }
 
     public function approve(Attendance $attendance)
@@ -127,5 +148,20 @@ class AttendanceController extends Controller
         $attendance->save();
 
         return redirect()->route('user.attendance')->with('message', 'Attendance approved successfully.');
+    }
+    public function checkOut(Request $request) {
+        $user = Auth::user();
+        $employee = Employee::find($user->id);
+        $today = now();
+        $attendance = Attendance::where('employee_id' , $employee->id)
+            ->whereDate('created_at' , $today)->first();
+        
+        $attendance = Attendance::findOrFail($attendance->id);
+        $attendance->check_out_time = now()->timezone('Asia/Yangon');
+        $attendance->check_out_latitude = $request->check_out_latitude;
+        $attendance->check_out_longitude = $request->check_out_longitude;
+        $attendance->save();
+
+        return redirect()->route('user.attendance')->with('message', 'Check out successfully.');
     }
 }

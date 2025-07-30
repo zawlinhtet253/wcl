@@ -13,7 +13,7 @@ class Attendance extends Model
     public function employee() {
         return $this->belongsTo(Employee::class);
     }
-    public function approveBy() {
+    public function approvedBy() {
         return $this->belongsTo(Employee::class , 'approved_by');
     }
 }
