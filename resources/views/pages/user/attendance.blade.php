@@ -87,7 +87,7 @@
                     </div>
 
                     <!-- Check-in Form for Desktop (md and above) -->
-                    <div class="d-none d-md-block">
+                    <div class="d-none d-md-block mx-auto w-50">
                         <div class="d-flex align-items-center justify-content-between mb-4">
                             <h1 class="h4 mb-0 text-primary font-weight-bold d-flex align-items-center gap-2">
                                 <i class="fa fa-clock"></i> Attendance
@@ -188,7 +188,7 @@
             getLocation('checkout-form', 'check_out_latitude', 'check_out_longitude', 'checkout-btn', 'location-error-checkout', 'loading-indicator-checkout');
         }
 
-        // Bootstrap form validation
+        // Bootstrap form validation with confirmation for checkout
         (function () {
             'use strict';
             const forms = document.querySelectorAll('.needs-validation');
@@ -198,6 +198,12 @@
                     if (!form.checkValidity() || !document.getElementById(latField).value) {
                         event.preventDefault();
                         event.stopPropagation();
+                    } else if (form.id === 'checkout-form') {
+                        event.preventDefault(); // Prevent submission until confirmed
+                        if (confirm('Are you sure you want to check out?')) {
+                            form.submit(); // Submit if confirmed
+                        }
+                        return; // Exit to avoid adding 'was-validated' prematurely
                     }
                     form.classList.add('was-validated');
                 }, false);
@@ -211,6 +217,6 @@
             document.getElementById('geo-icon').classList.toggle('text-primary', geoEnabled);
             document.getElementById('geo-status').textContent = geoEnabled ? 'Verified' : 'Not enabled';
         }
-    </script>
+        </script>
 </div>
 @endsection

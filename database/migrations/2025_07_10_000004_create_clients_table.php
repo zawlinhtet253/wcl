@@ -16,6 +16,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('industry_type');
             $table->string('code')->unique(); // Serial number/code given by company
+            $table->string('address')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->foreignId('team_id');
             $table->timestamps();
         });

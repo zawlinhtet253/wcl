@@ -58,7 +58,13 @@ public function index()
     // Show create form
     public function create()
     {
-        $clients = Client::orderBy('name')->get();
+        $user = Auth::user();
+        $employee = Employee::where('user_id', $user->id)->first();
+        
+        if (!$employee) {
+            return redirect()->route('user.dashboard')->with('error', 'Employee record not found.');
+        }
+        $clients = Client::where('team_id', $employee->team_id ?? null)->get();
         return view('pages.user.timesheet.addTimesheet', compact('clients'));
     }
 
@@ -78,7 +84,7 @@ public function index()
         if (!$employee) {
             return redirect()->route('user.dashboard')->with('error', 'Employee record not found.');
         }
-
+       
         Timesheet::create([
             'client_id' => $request->client_id,
             'employee_id' => $employee->id,

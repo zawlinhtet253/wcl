@@ -26,6 +26,7 @@ Route::middleware(['auth'])->group(function () {
     // Attendance Routes
     Route::get('/user/attendance', [AttendanceController::class, 'attendance'])->name('user.attendance');
     Route::post('/user/attendance/check-out', [AttendanceController::class, 'checkOut'])->name('user.attendance.checkout');
+    Route::get('/user/attendance/auto-check-out', [AttendanceController::class, 'autoCheckOut'])->name('user.attendance.autoCheckOut');
     Route::get('/user/attendances', [AttendanceController::class, 'attendances'])->name('user.attendances');
     Route::get('/user/attendances/add', [AttendanceController::class, 'add'])->name('attendance.add');
     Route::post('/user/attendances/add', [AttendanceController::class, 'store'])->name('attendance.store');
@@ -40,7 +41,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/user/timesheets/{id}', [TimesheetController::class, 'update'])->name('timesheet.update');
     Route::delete('/user/timesheets/{id}', [TimesheetController::class, 'destroy'])->name('timesheet.destroy');
     Route::post('/user/timesheets/{timesheet}/approve', [TimesheetController::class, 'approve'])->name('timesheet.approve');
-
+    
     // Admin Routes
     Route::prefix('admin')->group(function () {
         // Admin User Management
@@ -57,6 +58,12 @@ Route::middleware(['auth'])->group(function () {
 
         // Admin Client Management
         Route::get('/clients', [ClientController::class, 'index'])->name('admin.clients');
+        Route::get('/clients/create', [ClientController::class, 'create'])->name('admin.client.create');
+        Route::post('/clients', [ClientController::class, 'store'])->name('admin.client.store');
+        Route::get('/clients/{id}', [ClientController::class, 'show'])->name('admin.client.show');
+        Route::get('/clients/{id}/edit', [ClientController::class, 'edit'])->name('admin.client.edit');
+        Route::patch('/clients/{id}', [ClientController::class, 'update'])->name('admin.client.update');
+        Route::delete('/clients/{id}', [ClientController::class, 'delete'])->name('admin.client.delete');
     });
 });
 

@@ -19,6 +19,7 @@ class AttendanceController extends Controller
             ->first() : null;
         return view('pages.user.attendance', compact('employee' , 'todayAttendance'));
     }
+    
     public function attendances()
     {
         $user = Auth::user();
@@ -147,7 +148,7 @@ class AttendanceController extends Controller
         $attendance->approved_by = $user->id;
         $attendance->save();
 
-        return redirect()->route('user.attendance')->with('message', 'Attendance approved successfully.');
+        return redirect()->route('user.attendances')->with('message', 'Attendance approved successfully.');
     }
     public function checkOut(Request $request) {
         $user = Auth::user();
@@ -155,13 +156,18 @@ class AttendanceController extends Controller
         $today = now();
         $attendance = Attendance::where('employee_id' , $employee->id)
             ->whereDate('created_at' , $today)->first();
-        
         $attendance = Attendance::findOrFail($attendance->id);
         $attendance->check_out_time = now()->timezone('Asia/Yangon');
         $attendance->check_out_latitude = $request->check_out_latitude;
         $attendance->check_out_longitude = $request->check_out_longitude;
         $attendance->save();
 
-        return redirect()->route('user.attendance')->with('message', 'Check out successfully.');
+        return redirect()->route('user.attendances')->with('success', 'Check out successfully.');
+    }
+    public function autoCheckOut() {
+        $today = now()->toDateString();
+        $attendances = Attendance::whereDate('created_at' , $today)
+            ->whereNull('check_in_time')->get();
+        dd($attendances);
     }
 }

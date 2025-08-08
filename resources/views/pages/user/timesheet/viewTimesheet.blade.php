@@ -6,9 +6,6 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="text-center mb-0">Timesheet Details</h2>
             <div>
-                <a href="{{ route('user.timesheet.edit', $timesheet->id) }}" class="btn btn-warning me-2">
-                    <i class="fas fa-edit"></i> Edit
-                </a>
                 <a href="{{ route('user.timesheet') }}" class="btn btn-secondary">
                     <i class="fas fa-arrow-left"></i> Back to Timesheets
                 </a>
@@ -98,29 +95,6 @@
                     </div>
                 </div>
 
-                <div class="card mt-3">
-                    <div class="card-header bg-warning text-dark">
-                        <h6 class="card-title mb-0">
-                            <i class="fas fa-cog me-2"></i>Actions
-                        </h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-grid gap-2">
-                            <a href="{{ route('user.timesheet.edit', $timesheet->id) }}" class="btn btn-outline-warning">
-                                <i class="fas fa-edit me-2"></i>Edit Timesheet
-                            </a>
-                            <form action="{{ route('timesheet.destroy', $timesheet->id) }}" 
-                                  method="POST" 
-                                  onsubmit="return confirm('Are you sure you want to delete this timesheet?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-outline-danger w-100">
-                                    <i class="fas fa-trash me-2"></i>Delete Timesheet
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

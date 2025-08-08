@@ -20,7 +20,12 @@
         </form>
     </div> -->
     <div class="bg-white p-4 rounded shadow-lg w-100 m-auto mt-5" style="max-width: 1200px;">
-        <h3>Clients</h3>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-4">Clients</h2>
+            <a href="{{ route('admin.client.create') }}" class="btn btn-primary mb-4">
+                <i class="bi bi-plus"></i> Add Client
+            </a>
+        </div>
         @if (session('error'))
             <div class="alert alert-danger">
                 {{ session('error') }}
@@ -38,17 +43,23 @@
                         <th>ID</th>
                         <th>Name</th>
                         <th>Type</th>
-                        <th>Code</th>
+                        <th>Client Code</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Address</th>
                         <th>Team Code</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($clients as $client)
                         <tr>
-                            <td>{{ $client->id }}</td>
+                            <td>{{ $loop->iteration }}</td>
                             <td>{{ $client->name }}</td>
                             <td>{{ $client->industry_type }}</td>
                             <td>{{ $client->code }}</td>
+                            <td>{{ $client->phone ?? 'အချက်အလက်မရှိ' }}</td>
+                            <td>{{ $client->email ?? 'အချက်အလက်မရှိ' }}</td>
+                            <td>{{ $client->address ?? 'အချက်အလက်မရှိ' }}</td>
                             <td>{{ $client->team->code ?? 'အဖွဲ့မရှိ' }}</td>
                         </tr>
                     @empty
