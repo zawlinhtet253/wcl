@@ -80,11 +80,17 @@ public function index()
 
         $user = Auth::user();
         $employee = Employee::where('user_id', $user->id)->first();
+        $client = Client::find($request->client_id);
         
         if (!$employee) {
             return redirect()->route('user.dashboard')->with('error', 'Employee record not found.');
         }
-       
+        if (!$client) {
+            return redirect()->route('user.timesheet')->with('error', 'Client not found.');
+        }
+        if ($client->team_id !== $employee->team_id) {
+            return redirect()->route('user.timesheet')->with('error', 'Unauthorized to add timesheet for this client.');
+        }
         Timesheet::create([
             'client_id' => $request->client_id,
             'employee_id' => $employee->id,
