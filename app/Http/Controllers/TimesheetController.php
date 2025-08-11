@@ -39,7 +39,7 @@ public function index()
             ->whereHas('employee', function ($q) use ($employee) {
                 $q->where('team_id', $employee->team_id);
             });
-    } elseif ($user->level === 3) {
+    } elseif ($user->level == 3) {
         $query = Timesheet::with(['client', 'employee.user', 'employee.team']);
     } else {
         return redirect()->route('user.dashboard')->with('error', 'Invalid user level.');
@@ -81,6 +81,16 @@ public function index()
         $user = Auth::user();
         $employee = Employee::where('user_id', $user->id)->first();
         $client = Client::find($request->client_id);
+        $existing = Timesheet::where('client_id', $request->client_id)
+            ->where('employee_id', $employee->id)
+            ->where('from', $request->from)
+            ->where('to', $request->to)
+            ->first();
+            
+        if ($existing) {
+            return redirect()->route('user.timesheet')->with('error', 'Timesheet already exists for this period');
+        }
+        
         
         if (!$employee) {
             return redirect()->route('user.dashboard')->with('error', 'Employee record not found.');
@@ -91,13 +101,14 @@ public function index()
         if ($client->team_id !== $employee->team_id) {
             return redirect()->route('user.timesheet')->with('error', 'Unauthorized to add timesheet for this client.');
         }
-        Timesheet::create([
-            'client_id' => $request->client_id,
-            'employee_id' => $employee->id,
-            'description' => $request->description,
-            'from' => $request->from,
-            'to' => $request->to,
-        ]);
+        $timesheet = new Timesheet();
+        $timesheet->employee_id = $employee->id;
+        $timesheet->client_id = $request->client_id;
+        $timesheet->description = $request->description;
+        $timesheet->from = Carbon::parse($request->from);
+        $timesheet->to = Carbon::parse($request->to);
+        $timesheet->status = 0; // Default status to 0 (not approved)
+        $timesheet->save();
 
         return redirect()->route('user.timesheet')->with('message', 'Timesheet added successfully');
     }

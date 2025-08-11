@@ -1,4 +1,5 @@
 <!-- resources/views/pages/user/attendance.blade.php -->
+
 @extends('layouts.app')
 
 @section('content')
@@ -103,6 +104,7 @@
                                 </span>
                             </td>
                             <td>
+                                
                                 @if (!$timesheet->status)
                                     <form action="{{ route('timesheet.approve' , ['timesheet' => $timesheet->id])}}" method="POST">
                                         @csrf
