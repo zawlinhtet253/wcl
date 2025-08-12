@@ -75,7 +75,7 @@
                                         <td>{{ $attendance->name }}</td>
                                         <td>{{ \Carbon\Carbon::parse($attendance->created_at)->toDateString() }}</td>
                                         <td>{{ \Carbon\Carbon::parse($attendance->check_in_time)->toTimeString() }}</td>
-                                        <td>{{ $attendance->check_out_time ? \Carbon\Carbon::parse($attendance->check_out_time)->timezone('Asia/Singapore')->toTimeString() : 'N/A' }}</td>
+                                        <td>{{ $attendance->check_out_time ? \Carbon\Carbon::parse($attendance->check_out_time)->toTimeString() : 'N/A' }}</td>
                                         <td>
                                             @if ($attendance->check_in_latitude && $attendance->check_in_longitude)
                                                 <a href="https://www.google.com/maps?q={{ $attendance->check_in_latitude }},{{ $attendance->check_in_longitude }}" target="_blank" class="text-accent underline hover:text-primary">Check-In</a>
