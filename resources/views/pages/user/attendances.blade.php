@@ -73,8 +73,8 @@
                                         <td>{{ $attendance->employee->user->name }}</td>
                                         <td>{{ $attendance->employee->employee_code }}</td>
                                         <td>{{ $attendance->name }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($attendance->created_at)->timezone('Asia/Singapore')->toDateString() }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($attendance->check_in_time)->timezone('Asia/Singapore')->toTimeString() }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($attendance->created_at)->timezone('Asia/Yangon')->toDateString() }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($attendance->check_in_time)->timezone('Asia/Yangon')->toTimeString() }}</td>
                                         <td>{{ $attendance->check_out_time ? \Carbon\Carbon::parse($attendance->check_out_time)->timezone('Asia/Singapore')->toTimeString() : 'N/A' }}</td>
                                         <td>
                                             @if ($attendance->check_in_latitude && $attendance->check_in_longitude)
